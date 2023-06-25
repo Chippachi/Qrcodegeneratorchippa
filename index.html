@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <script src="script.js" defer></script>
-    <title>QRcodegeneratorr</title>
+    <title>QRcodegenerator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -21,27 +22,47 @@
 
   <script>
     let imgBox = document.getElementById("imgBox");
-    let qrImage = document.getElementById("qrImage");
     let qrText = document.getElementById("qrText");
 
     function GenerateQR() {
       if (qrText.value.length > 0) {
-        qrImage.src =
-          "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" +
-          qrText.value;
+        // Удаляем предыдущий QR-код, если есть
+        let existingQRImage = document.getElementById("qrImage");
+        if (existingQRImage) {
+          existingQRImage.parentNode.removeChild(existingQRImage);
+        }
+
+        // Создаем новый элемент img для отображения QR-кода
+        let qrImage = document.createElement("img");
+        qrImage.id = "qrImage";
+        imgBox.appendChild(qrImage);
+
+        // Используем библиотеку QR Code Generator для генерации QR-кода
+        let qr = qrcode(0, "L");
+        qr.addData(qrText.value);
+        qr.make();
+
+        qrImage.src = qr.createDataURL(10, 0);
+
         imgBox.classList.add("show-img");
 
-        let downloadButton = document.createElement("button");
+        let downloadButton = document.getElementById("downloadButton");
+        if (downloadButton) {
+          downloadButton.parentNode.removeChild(downloadButton);
+        }
+
+        downloadButton = document.createElement("button");
+        downloadButton.id = "downloadButton";
         downloadButton.type = "button";
         downloadButton.classList.add("button");
-        downloadButton.setAttribute("data-download", "qrImage");
         downloadButton.textContent = "Download Image";
         imgBox.appendChild(downloadButton);
 
         downloadButton.addEventListener("click", function () {
-          // Create a link to download the QR code
+          // Создаем ссылку для скачивания
+          let canvas = qrImage;
           let downloadLink = document.createElement("a");
-          downloadLink.href = qrImage.src;
+          downloadLink.href = canvas.src;
           downloadLink.download = "qr_code.png";
           downloadLink.click();
         });
