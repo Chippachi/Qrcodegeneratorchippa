@@ -8,7 +8,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5779348155964797"
      crossorigin="anonymous"></script>
     <script src="script.js" defer></script>
-    <title>QRcodegeneratorr</title>
+    <title>QRcodegenerator</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.min.js"></script>
 </head>
 <body>
@@ -28,18 +28,18 @@
 
     function GenerateQR() {
       if (qrText.value.length > 0) {
-       
+        // Удаляем предыдущий QR-код, если есть
         let existingQRImage = document.getElementById("qrImage");
         if (existingQRImage) {
           existingQRImage.parentNode.removeChild(existingQRImage);
         }
 
-       
+        // Создаем новый элемент img для отображения QR-кода
         let qrImage = document.createElement("img");
         qrImage.id = "qrImage";
         imgBox.appendChild(qrImage);
 
-        
+        // Используем библиотеку QR Code Generator для генерации QR-кода
         let qr = qrcode(0, "L");
         qr.addData(qrText.value);
         qr.make();
@@ -61,7 +61,7 @@
         imgBox.appendChild(downloadButton);
 
         downloadButton.addEventListener("click", function () {
-          
+          // Создаем ссылку для скачивания
           let canvas = qrImage;
           let downloadLink = document.createElement("a");
           downloadLink.href = canvas.src;
